@@ -361,3 +361,15 @@ def logout():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+
+
+# LifeLink professional design upgrade
+
+@app.after_request
+def add_lifelink_design(response):
+    if response.content_type and "text/html" in response.content_type:
+        html = response.get_data(as_text=True)
+        if "</head>" in html:
+            html = html.replace("</head>", '\n<style>\n* {\n    box-sizing: border-box;\n}\n\nbody {\n    margin: 0;\n    padding: 30px 18px;\n    font-family: \'Segoe UI\', Arial, sans-serif;\n    background: #fff5f5 !important;\n    color: #252525;\n    line-height: 1.6;\n}\n\nh1, h2, h3 {\n    color: #b5122b !important;\n    font-weight: 750;\n}\n\nh1 {\n    font-size: 38px;\n}\n\na, button, input[type="submit"] {\n    transition: 0.25s ease;\n}\n\na {\n    color: #c1122f;\n    font-weight: 600;\n}\n\na:hover {\n    color: #850019;\n}\n\nbutton, input[type="submit"] {\n    background: #c1122f !important;\n    color: white !important;\n    border: none !important;\n    border-radius: 9px !important;\n    padding: 12px 22px !important;\n    cursor: pointer;\n    font-weight: 700;\n}\n\nbutton:hover, input[type="submit"]:hover {\n    background: #850019 !important;\n    transform: translateY(-2px);\n}\n\ninput, select, textarea {\n    width: 100%;\n    max-width: 450px;\n    padding: 12px !important;\n    margin: 8px 0 16px;\n    border: 1px solid #e4bfc5 !important;\n    border-radius: 8px !important;\n    background: white;\n}\n\ntable {\n    width: 100%;\n    border-collapse: collapse;\n    background: white;\n    border-radius: 12px;\n    overflow: hidden;\n}\n\nth {\n    background: #c1122f;\n    color: white;\n    padding: 14px;\n}\n\ntd {\n    padding: 12px;\n    border-bottom: 1px solid #eee;\n}\n\ntr:hover {\n    background: #fff0f2;\n}\n\nform {\n    background: white;\n    padding: 24px;\n    border-radius: 14px;\n    box-shadow: 0 5px 22px rgba(120, 0, 25, 0.08);\n}\n\n</style>\n' + "</head>", 1)
+            response.set_data(html)
+    return response
